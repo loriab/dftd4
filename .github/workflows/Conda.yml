@@ -22,72 +22,83 @@ env:
 
 jobs:
 
-#  windows_ifort:
-#    runs-on: windows-latest
-#    name: Windows Intel
-#    defaults:
-#      run:
-#        # below obviates `eval "$(conda shell.bash hook)" && conda activate`. see https://github.com/conda-incubator/setup-miniconda#use-a-default-shell
-#        shell: bash -l {0}
-#
-#    steps:
-#    - uses: actions/checkout@v2
-#
-#    - name: "OneAPI: cache install"
-#      id: cache-install
-#      uses: actions/cache@v2
-#      with:
-#        path: C:\Program Files (x86)\Intel\oneAPI\compiler
-#        key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_windows.sh') }}
-#
-#    - name: "OneAPI: install"
-#      if: steps.cache-install.outputs.cache-hit != 'true'
-#      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
-#
-#    - name: "OneAPI: exclude unused files from cache"
-#      if: steps.cache-install.outputs.cache-hit != 'true'
-#      shell: bash
-#      run: devtools/oneapi-ci/cache_exclude_windows.sh
-#
-#    - name: Create Conda Environment
-#      uses: conda-incubator/setup-miniconda@v2
-#      with:
-#        activate-environment: ""
-#        add-pip-as-python-dependency: true
-#        auto-activate-base: true
-#        conda-build-version: "*"
-#        show-channel-urls: true
-#
-#    - name: Environment Information
-#      run: |
-#        conda install anaconda-client
-#        conda info
-#        conda list
-#
-#      # Source Compilers is for reference. happens for real w/i conda recipe
-#    - name: Source Compilers
-#      shell: cmd
-#      run: |
-#        for /f "tokens=* usebackq" %%f in (`dir /b "C:\Program Files (x86)\Intel\oneAPI\compiler\" ^| findstr /V latest ^| sort`) do @set "LATEST_VERSION=%%f"
-#        echo %LATEST_VERSION%
-#        @call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
-#
-#    - name: Conda-Build for Windows
-#      env:
-#        # generate token at anaconda.org, then at GH Settings Secrets, save as repository secret with name ANACONDA_TOKEN
-#        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-#      run: |
-#        conda build conda/recipe -c defaults --output-folder .
-#        ls -l win-64/
-#        anaconda upload --label gha --skip win-64/*.tar.bz2
-#
-#    - name: Archive Conda Package
-#      uses: actions/upload-artifact@v2
-#      with:
-#        name: win-dftd4-conda-package
-#        path: |
-#          win-64/*.tar.bz2
-#        retention-days: 1
+  windows_ifort:
+    runs-on: windows-latest
+    name: Windows Intel
+    defaults:
+      run:
+        # below obviates `eval "$(conda shell.bash hook)" && conda activate`. see https://github.com/conda-incubator/setup-miniconda#use-a-default-shell
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: "OneAPI F: cache install"
+      id: cache-install-f
+      uses: actions/cache@v2
+      with:
+        path: C:\Program Files (x86)\Intel\oneAPI\compiler
+        key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_windows.sh') }}
+
+    - name: "OneAPI C: cache install"
+      id: cache-install-c
+      uses: actions/cache@v2
+      with:
+        path: C:\Program Files (x86)\Intel\oneAPI\compiler
+        key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_CPP_COMPONENTS }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_windows.sh') }}
+
+    - name: "OneAPI F: install"
+      if: steps.cache-install-f.outputs.cache-hit != 'true'
+      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
+
+    - name: "OneAPI C: install"
+      if: steps.cache-install-c.outputs.cache-hit != 'true'
+      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_CPP_COMPONENTS
+
+    - name: "OneAPI: exclude unused files from cache"
+      if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
+      shell: bash
+      run: devtools/oneapi-ci/cache_exclude_windows.sh
+
+    - name: Create Conda Environment
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: ""
+        add-pip-as-python-dependency: true
+        auto-activate-base: true
+        conda-build-version: "*"
+        show-channel-urls: true
+
+    - name: Environment Information
+      run: |
+        conda install anaconda-client
+        conda info
+        conda list
+
+      # Source Compilers is for reference. happens for real w/i conda recipe
+    - name: Source Compilers
+      shell: cmd
+      run: |
+        for /f "tokens=* usebackq" %%f in (`dir /b "C:\Program Files (x86)\Intel\oneAPI\compiler\" ^| findstr /V latest ^| sort`) do @set "LATEST_VERSION=%%f"
+        echo %LATEST_VERSION%
+        @call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
+
+    - name: Conda-Build for Windows
+      env:
+        # generate token at anaconda.org, then at GH Settings Secrets, save as repository secret with name ANACONDA_TOKEN
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+      run: |
+        conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
+        ls -l win-64/
+        anaconda upload --label gha --skip win-64/*.tar.bz2
+
+    - name: Archive Conda Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: win-dftd4-conda-package
+        path: |
+          win-64/*.tar.bz2
+        retention-days: 1
 
 
   linux_ifort:
@@ -222,7 +233,7 @@ jobs:
 #    - name: Source Compilers
 #      run: |
 #        source /opt/intel/oneapi/setvars.sh
-#        which conda conda-build python ifort
+#        which conda conda-build python ifort icc icpc
 #
 #    - name: Conda-Build for Mac
 #      env:

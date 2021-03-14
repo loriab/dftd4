@@ -31,9 +31,8 @@ fi
 export FC=ifort
 export CC=icc
 
-echo $LIBRARY_PATH
+# allows meson to find conda mkl_rt
 export LIBRARY_PATH=${PREFIX}/lib
-echo $LIBRARY_PATH
 
 # configure
 meson_options=(
