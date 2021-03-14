@@ -49,14 +49,15 @@ jobs:
 
     - name: "OneAPI F: install"
       if: steps.cache-install-f.outputs.cache-hit != 'true'
-      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
+      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL "$WINDOWS_FORTRAN_COMPONENTS $WINDOWS_CPP_COMPONENTS"
 
-    - name: "OneAPI C: install"
-      if: steps.cache-install-c.outputs.cache-hit != 'true'
-      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_CPP_COMPONENTS
+#    - name: "OneAPI C: install"
+#      if: steps.cache-install-c.outputs.cache-hit != 'true'
+#      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_CPP_COMPONENTS
 
     - name: "OneAPI: exclude unused files from cache"
-      if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
+      #if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
+      if: (steps.cache-install-f.outputs.cache-hit != 'true')
       shell: bash
       run: devtools/oneapi-ci/cache_exclude_windows.sh
 
