@@ -1,0 +1,13 @@
+diff --git a/config/meson.build b/config/meson.build
+index 6df1cce..426034f 100644
+--- a/config/meson.build
++++ b/config/meson.build
+@@ -84,7 +84,7 @@ elif lapack_vendor == 'mkl-rt'
+ 
+   mkl_rt_dep = fc.find_library('mkl_rt', required: true)
+   if fc.get_id() == 'intel'
+-    lib_deps += fc.find_library('ifcore')
++#    lib_deps += fc.find_library('ifcore')
+   endif
+   lib_deps += mkl_rt_dep
+
