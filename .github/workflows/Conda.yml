@@ -22,7 +22,7 @@ env:
 
 jobs:
 
-  windows_ifort:
+  windows_intel:
     runs-on: windows-latest
     name: Windows Intel
     defaults:
@@ -49,7 +49,7 @@ jobs:
 
     - name: "OneAPI F: install"
       if: steps.cache-install-f.outputs.cache-hit != 'true'
-      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL "$WINDOWS_FORTRAN_COMPONENTS $WINDOWS_CPP_COMPONENTS"
+      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS,$WINDOWS_CPP_COMPONENTS
 
 #    - name: "OneAPI C: install"
 #      if: steps.cache-install-c.outputs.cache-hit != 'true'
@@ -102,7 +102,7 @@ jobs:
         retention-days: 1
 
 
-  linux_ifort:
+  linux_intel:
     runs-on: ubuntu-latest
     name: Linux Intel
     defaults:
@@ -189,68 +189,79 @@ jobs:
         retention-days: 1
 
 
-#  macos_ifort:
-#    runs-on: macos-latest
-#    name: Mac Intel
-#    defaults:
-#      run:
-#        shell: bash -l {0}
-#
-#    steps:
-#    - uses: actions/checkout@v2
-#
-#    - name: "OneAPI: prepare for cache restore"
-#      run: |
-#        sudo mkdir -p /opt/intel
-#        sudo chown $USER /opt/intel
-#
-#    - name: "OneAPI: cache install"
-#      id: cache-install
-#      uses: actions/cache@v2
-#      with:
-#        path: /opt/intel/oneapi
-#        key: install-${{ env.MACOS_HPCKIT_URL }}-${{ env.MACOS_FORTRAN_COMPONENTS }}
-#
-#    - name: "OneAPI: install"
-#      if: steps.cache-install.outputs.cache-hit != 'true'
-#      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_FORTRAN_COMPONENTS
-#
-#    - name: Create Conda Environment
-#      uses: conda-incubator/setup-miniconda@v2
-#      with:
-#        activate-environment: ""
-#        add-pip-as-python-dependency: true
-#        auto-activate-base: true
-#        conda-build-version: "*"
-#        show-channel-urls: true
-#
-#    - name: Environment Information
-#      run: |
-#        conda install anaconda-client
-#        conda info
-#        conda list
-#
-#      # Source Compilers is for reference. happens for real w/i conda recipe
-#    - name: Source Compilers
-#      run: |
-#        source /opt/intel/oneapi/setvars.sh
-#        which conda conda-build python ifort icc icpc
-#
-#    - name: Conda-Build for Mac
-#      env:
-#        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-#      run: |
-#        conda build conda/recipe -c defaults --output-folder .
-#        ls -l osx-64/
-#        anaconda upload --label gha --skip osx-64/*.tar.bz2
-#
-#    - name: Archive Conda Package
-#      uses: actions/upload-artifact@v2
-#      with:
-#        name: osx-dftd4-conda-package
-#        path: |
-#          osx-64/*.tar.bz2
-#        retention-days: 1
+  macos_intel:
+    runs-on: macos-latest
+    name: Mac Intel
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: "OneAPI: prepare for cache restore"
+      run: |
+        sudo mkdir -p /opt/intel
+        sudo chown $USER /opt/intel
+
+    - name: "OneAPI: cache install"
+      id: cache-install
+      uses: actions/cache@v2
+      with:
+        path: /opt/intel/oneapi
+        key: install-${{ env.MACOS_HPCKIT_URL }}-${{ env.MACOS_FORTRAN_COMPONENTS }}
+
+    - name: "OneAPI C: cache install"
+      id: cache-install-c
+      uses: actions/cache@v2
+      with:
+        path: /opt/intel/oneapi
+        key: install-${{ env.MACOS_HPCKIT_URL }}-${{ env.MACOS_CPP_COMPONENTS }}
+
+    - name: "OneAPI: install"
+      if: steps.cache-install.outputs.cache-hit != 'true'
+      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_FORTRAN_COMPONENTS
+
+    - name: "OneAPI C: install"
+      if: steps.cache-install-c.outputs.cache-hit != 'true'
+      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_CPP_COMPONENTS
+
+    - name: Create Conda Environment
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: ""
+        add-pip-as-python-dependency: true
+        auto-activate-base: true
+        conda-build-version: "*"
+        show-channel-urls: true
+
+    - name: Environment Information
+      run: |
+        conda install anaconda-client
+        conda info
+        conda list
+
+      # Source Compilers is for reference. happens for real w/i conda recipe
+    - name: Source Compilers
+      run: |
+        source /opt/intel/oneapi/setvars.sh
+        which conda conda-build python ifort icc icpc
+
+    - name: Conda-Build for Mac
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+      run: |
+        conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
+        ls -l osx-64/
+        anaconda upload --label gha --skip osx-64/*.tar.bz2
+
+    - name: Archive Conda Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: osx-dftd4-conda-package
+        path: |
+          osx-64/*.tar.bz2
+        retention-days: 1
 
 
 # more setup-miniconda options
