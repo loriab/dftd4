@@ -15,9 +15,8 @@ env:
   MACOS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/17398/m_HPCKit_p_2021.1.0.2681_offline.dmg
   WINDOWS_CPP_COMPONENTS: intel.oneapi.win.cpp-compiler
   WINDOWS_FORTRAN_COMPONENTS: intel.oneapi.win.ifort-compiler
-  #LINUX_CPP_COMPONENTS: intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
-  #LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
-  LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+  LINUX_CPP_COMPONENTS: intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+  LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
   MACOS_CPP_COMPONENTS: intel.oneapi.mac.cpp-compiler
   MACOS_FORTRAN_COMPONENTS: intel.oneapi.mac.ifort-compiler
 
@@ -107,6 +106,9 @@ jobs:
     - name: "OneAPI: collect versioned dependencies of apt packages"
       run: devtools/oneapi-ci/apt_depends.sh $LINUX_FORTRAN_COMPONENTS | tee depends.txt
 
+    - name: "OneAPI C: collect versioned dependencies of apt packages"
+      run: devtools/oneapi-ci/apt_depends.sh $LINUX_CPP_COMPONENTS | tee depends_c.txt
+
     - name: "OneAPI: cache install"
       id: cache-install
       uses: actions/cache@v2
@@ -115,12 +117,24 @@ jobs:
           /opt/intel/oneapi/compiler
         key: install-${{ env.LINUX_FORTRAN_COMPONENTS }}-${{ hashFiles('**/depends.txt') }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_linux.sh') }}
 
+    - name: "OneAPI C: cache install"
+      id: cache-install-c
+      uses: actions/cache@v2
+      with:
+        path: |
+          /opt/intel/oneapi/compiler
+        key: install-${{ env.LINUX_CPP_COMPONENTS }}-${{ hashFiles('**/depends_c.txt') }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_linux.sh') }}
+
     - name: "OneAPI: install"
       if: steps.cache-install.outputs.cache-hit != 'true'
       run: devtools/oneapi-ci/install_linux_apt.sh $LINUX_FORTRAN_COMPONENTS
 
+    - name: "OneAPI C: install"
+      if: steps.cache-install-c.outputs.cache-hit != 'true'
+      run: devtools/oneapi-ci/install_linux_apt.sh $LINUX_CPP_COMPONENTS
+
     - name: "OneAPI: exclude unused files from cache"
-      if: steps.cache-install.outputs.cache-hit != 'true'
+      if: (steps.cache-install.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
       run: devtools/oneapi-ci/cache_exclude_linux.sh
 
     - name: Create Conda Environment
