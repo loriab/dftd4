@@ -20,11 +20,11 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
-    - {{ compiler('fortran') }}
+    - {{ compiler('fortran') }}                            # [not win]
     - cffi
     - meson 0.55.*
     - ninja
-    - pkg-config
+#    - pkg-config
     - python 3.9
   host:
     - cffi
