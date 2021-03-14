@@ -103,19 +103,19 @@ jobs:
     - name: "OneAPI: setup apt repo"
       run: devtools/oneapi-ci/setup_apt_repo_linux.sh
 
-    - name: "OneAPI: collect versioned dependencies of apt packages"
-      run: devtools/oneapi-ci/apt_depends.sh $LINUX_FORTRAN_COMPONENTS | tee depends.txt
+    - name: "OneAPI F: collect versioned dependencies of apt packages"
+      run: devtools/oneapi-ci/apt_depends.sh $LINUX_FORTRAN_COMPONENTS | tee depends_f.txt
 
     - name: "OneAPI C: collect versioned dependencies of apt packages"
       run: devtools/oneapi-ci/apt_depends.sh $LINUX_CPP_COMPONENTS | tee depends_c.txt
 
-    - name: "OneAPI: cache install"
-      id: cache-install
+    - name: "OneAPI F: cache install"
+      id: cache-install-f
       uses: actions/cache@v2
       with:
         path: |
           /opt/intel/oneapi/compiler
-        key: install-${{ env.LINUX_FORTRAN_COMPONENTS }}-${{ hashFiles('**/depends.txt') }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_linux.sh') }}
+        key: install-${{ env.LINUX_FORTRAN_COMPONENTS }}-${{ hashFiles('**/depends_f.txt') }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_linux.sh') }}
 
     - name: "OneAPI C: cache install"
       id: cache-install-c
@@ -125,8 +125,8 @@ jobs:
           /opt/intel/oneapi/compiler
         key: install-${{ env.LINUX_CPP_COMPONENTS }}-${{ hashFiles('**/depends_c.txt') }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_linux.sh') }}
 
-    - name: "OneAPI: install"
-      if: steps.cache-install.outputs.cache-hit != 'true'
+    - name: "OneAPI F: install"
+      if: steps.cache-install-f.outputs.cache-hit != 'true'
       run: devtools/oneapi-ci/install_linux_apt.sh $LINUX_FORTRAN_COMPONENTS
 
     - name: "OneAPI C: install"
@@ -157,7 +157,7 @@ jobs:
       run: |
         LATEST_VERSION=$(ls -1 /opt/intel/oneapi/compiler/ | grep -v latest | sort | tail -1)
         source /opt/intel/oneapi/compiler/"$LATEST_VERSION"/env/vars.sh
-        which conda conda-build python ifort icc
+        which conda conda-build python ifort icc icpc
 
       # `-c defaults -c psi4/label/dev` -or- `-c conda-forge` for QCElemental dep
     - name: Conda-Build for Linux

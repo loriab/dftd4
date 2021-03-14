@@ -31,6 +31,10 @@ fi
 export FC=ifort
 export CC=icc
 
+echo $LIBRARY_PATH
+export LIBRARY_PATH=${PREFIX}/lib
+echo $LIBRARY_PATH
+
 # configure
 meson_options=(
    "--prefix=${PREFIX}"
