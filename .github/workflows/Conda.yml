@@ -1,0 +1,236 @@
+name: Conda
+
+on: [push, pull_request]
+# only pushes to master or pushes to PRs to master
+#on:
+#  push:
+#    branches: [ master ]
+#  pull_request:
+#    branches: [ master ]
+
+# envvars and scripts from https://github.com/oneapi-src/oneapi-ci/blob/master/.github/workflows/build_all.yml
+env:
+  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/17392/w_HPCKit_p_2021.1.0.2682_offline.exe
+  LINUX_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/17427/l_HPCKit_p_2021.1.0.2684_offline.sh
+  MACOS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/17398/m_HPCKit_p_2021.1.0.2681_offline.dmg
+  WINDOWS_CPP_COMPONENTS: intel.oneapi.win.cpp-compiler
+  WINDOWS_FORTRAN_COMPONENTS: intel.oneapi.win.ifort-compiler
+  LINUX_CPP_COMPONENTS: intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+  LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
+  MACOS_CPP_COMPONENTS: intel.oneapi.mac.cpp-compiler
+  MACOS_FORTRAN_COMPONENTS: intel.oneapi.mac.ifort-compiler
+
+jobs:
+
+#  windows_ifort:
+#    runs-on: windows-latest
+#    name: Windows Intel
+#    defaults:
+#      run:
+#        # below obviates `eval "$(conda shell.bash hook)" && conda activate`. see https://github.com/conda-incubator/setup-miniconda#use-a-default-shell
+#        shell: bash -l {0}
+#
+#    steps:
+#    - uses: actions/checkout@v2
+#
+#    - name: "OneAPI: cache install"
+#      id: cache-install
+#      uses: actions/cache@v2
+#      with:
+#        path: C:\Program Files (x86)\Intel\oneAPI\compiler
+#        key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_windows.sh') }}
+#
+#    - name: "OneAPI: install"
+#      if: steps.cache-install.outputs.cache-hit != 'true'
+#      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
+#
+#    - name: "OneAPI: exclude unused files from cache"
+#      if: steps.cache-install.outputs.cache-hit != 'true'
+#      shell: bash
+#      run: devtools/oneapi-ci/cache_exclude_windows.sh
+#
+#    - name: Create Conda Environment
+#      uses: conda-incubator/setup-miniconda@v2
+#      with:
+#        activate-environment: ""
+#        add-pip-as-python-dependency: true
+#        auto-activate-base: true
+#        conda-build-version: "*"
+#        show-channel-urls: true
+#
+#    - name: Environment Information
+#      run: |
+#        conda install anaconda-client
+#        conda info
+#        conda list
+#
+#      # Source Compilers is for reference. happens for real w/i conda recipe
+#    - name: Source Compilers
+#      shell: cmd
+#      run: |
+#        for /f "tokens=* usebackq" %%f in (`dir /b "C:\Program Files (x86)\Intel\oneAPI\compiler\" ^| findstr /V latest ^| sort`) do @set "LATEST_VERSION=%%f"
+#        echo %LATEST_VERSION%
+#        @call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
+#
+#    - name: Conda-Build for Windows
+#      env:
+#        # generate token at anaconda.org, then at GH Settings Secrets, save as repository secret with name ANACONDA_TOKEN
+#        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+#      run: |
+#        conda build conda/recipe -c defaults --output-folder .
+#        ls -l win-64/
+#        anaconda upload --label gha --skip win-64/*.tar.bz2
+#
+#    - name: Archive Conda Package
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: win-dftd4-conda-package
+#        path: |
+#          win-64/*.tar.bz2
+#        retention-days: 1
+
+
+  linux_ifort:
+    runs-on: ubuntu-latest
+    name: Linux Intel
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: "OneAPI: setup apt repo"
+      run: devtools/oneapi-ci/setup_apt_repo_linux.sh
+
+    - name: "OneAPI: collect versioned dependencies of apt packages"
+      run: devtools/oneapi-ci/apt_depends.sh $LINUX_FORTRAN_COMPONENTS | tee depends.txt
+
+    - name: "OneAPI: cache install"
+      id: cache-install
+      uses: actions/cache@v2
+      with:
+        path: |
+          /opt/intel/oneapi/compiler
+        key: install-${{ env.LINUX_FORTRAN_COMPONENTS }}-${{ hashFiles('**/depends.txt') }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_linux.sh') }}
+
+    - name: "OneAPI: install"
+      if: steps.cache-install.outputs.cache-hit != 'true'
+      run: devtools/oneapi-ci/install_linux_apt.sh $LINUX_FORTRAN_COMPONENTS
+
+    - name: "OneAPI: exclude unused files from cache"
+      if: steps.cache-install.outputs.cache-hit != 'true'
+      run: devtools/oneapi-ci/cache_exclude_linux.sh
+
+    - name: Create Conda Environment
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: ""
+        add-pip-as-python-dependency: true
+        auto-activate-base: true
+        conda-build-version: "*"
+        show-channel-urls: true
+
+    - name: Environment Information
+      run: |
+        conda install anaconda-client
+        conda info
+        conda list
+
+      # Source Compilers is for reference. happens for real w/i conda recipe
+    - name: Source Compilers
+      run: |
+        LATEST_VERSION=$(ls -1 /opt/intel/oneapi/compiler/ | grep -v latest | sort | tail -1)
+        source /opt/intel/oneapi/compiler/"$LATEST_VERSION"/env/vars.sh
+        which conda conda-build python ifort
+
+    - name: Conda-Build for Linux
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+      run: |
+        conda build conda/recipe -c defaults --output-folder .
+        ls -l linux-64/
+        anaconda upload --label gha --skip linux-64/*.tar.bz2
+
+    - name: Archive Conda Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-dftd4-conda-package
+        path: |
+          linux-64/*.tar.bz2
+        retention-days: 1
+
+
+#  macos_ifort:
+#    runs-on: macos-latest
+#    name: Mac Intel
+#    defaults:
+#      run:
+#        shell: bash -l {0}
+#
+#    steps:
+#    - uses: actions/checkout@v2
+#
+#    - name: "OneAPI: prepare for cache restore"
+#      run: |
+#        sudo mkdir -p /opt/intel
+#        sudo chown $USER /opt/intel
+#
+#    - name: "OneAPI: cache install"
+#      id: cache-install
+#      uses: actions/cache@v2
+#      with:
+#        path: /opt/intel/oneapi
+#        key: install-${{ env.MACOS_HPCKIT_URL }}-${{ env.MACOS_FORTRAN_COMPONENTS }}
+#
+#    - name: "OneAPI: install"
+#      if: steps.cache-install.outputs.cache-hit != 'true'
+#      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_FORTRAN_COMPONENTS
+#
+#    - name: Create Conda Environment
+#      uses: conda-incubator/setup-miniconda@v2
+#      with:
+#        activate-environment: ""
+#        add-pip-as-python-dependency: true
+#        auto-activate-base: true
+#        conda-build-version: "*"
+#        show-channel-urls: true
+#
+#    - name: Environment Information
+#      run: |
+#        conda install anaconda-client
+#        conda info
+#        conda list
+#
+#      # Source Compilers is for reference. happens for real w/i conda recipe
+#    - name: Source Compilers
+#      run: |
+#        source /opt/intel/oneapi/setvars.sh
+#        which conda conda-build python ifort
+#
+#    - name: Conda-Build for Mac
+#      env:
+#        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+#      run: |
+#        conda build conda/recipe -c defaults --output-folder .
+#        ls -l osx-64/
+#        anaconda upload --label gha --skip osx-64/*.tar.bz2
+#
+#    - name: Archive Conda Package
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: osx-dftd4-conda-package
+#        path: |
+#          osx-64/*.tar.bz2
+#        retention-days: 1
+
+
+# more setup-miniconda options
+#    above use conda env only to launch c-b recipe. if building outside c-b, recc defining env in a yaml
+#        channels: conda-forge,defaults
+#        activate-environment: test
+#        environment-file: devtools/conda-envs/base-defaults.yaml
+#        python-version: ${{ matrix.cfg.python-version }}
+
+# the Linux line for Intel-atop-Conda-GCC, in case building outside c-b
+#    -DCMAKE_Fortran_FLAGS="-gnu-prefix=${CONDA_PREFIX}/bin/x86_64-conda_cos6-linux-gnu- --sysroot=${CONDA_PREFIX}/x86_64-conda_cos6-linux-gnu/sysroot"
