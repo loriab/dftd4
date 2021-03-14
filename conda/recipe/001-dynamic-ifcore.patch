@@ -10,4 +10,3 @@ index 6df1cce..426034f 100644
 +#    lib_deps += fc.find_library('ifcore')
    endif
    lib_deps += mkl_rt_dep
-
