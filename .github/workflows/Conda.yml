@@ -47,17 +47,12 @@ jobs:
         path: C:\Program Files (x86)\Intel\oneAPI\compiler
         key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_CPP_COMPONENTS }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_windows.sh') }}
 
-    - name: "OneAPI F: install"
-      if: steps.cache-install-f.outputs.cache-hit != 'true'
+    - name: "OneAPI: install"
+      if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
       run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS,$WINDOWS_CPP_COMPONENTS
 
-#    - name: "OneAPI C: install"
-#      if: steps.cache-install-c.outputs.cache-hit != 'true'
-#      run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_CPP_COMPONENTS
-
     - name: "OneAPI: exclude unused files from cache"
-      #if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
-      if: (steps.cache-install-f.outputs.cache-hit != 'true')
+      if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
       shell: bash
       run: devtools/oneapi-ci/cache_exclude_windows.sh
 
@@ -204,8 +199,8 @@ jobs:
         sudo mkdir -p /opt/intel
         sudo chown $USER /opt/intel
 
-    - name: "OneAPI: cache install"
-      id: cache-install
+    - name: "OneAPI F: cache install"
+      id: cache-install-f
       uses: actions/cache@v2
       with:
         path: /opt/intel/oneapi
@@ -219,12 +214,13 @@ jobs:
         key: install-${{ env.MACOS_HPCKIT_URL }}-${{ env.MACOS_CPP_COMPONENTS }}
 
     - name: "OneAPI: install"
-      if: steps.cache-install.outputs.cache-hit != 'true'
-      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_FORTRAN_COMPONENTS
+      if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
+      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_FORTRAN_COMPONENTS,$MACOS_CPP_COMPONENTS
 
-    - name: "OneAPI C: install"
-      if: steps.cache-install-c.outputs.cache-hit != 'true'
-      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_CPP_COMPONENTS
+#    - name: "OneAPI C: install"
+#      if: steps.cache-install-c.outputs.cache-hit != 'true'
+#      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_CPP_COMPONENTS
+# failing v/c installed
 
     - name: Create Conda Environment
       uses: conda-incubator/setup-miniconda@v2
