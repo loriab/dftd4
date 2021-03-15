@@ -20,7 +20,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
-    - {{ compiler('fortran') }}                            # [not win]
+#    - {{ compiler('fortran') }}                            # [not win]
     - cffi
     - meson 0.55.*
     - ninja

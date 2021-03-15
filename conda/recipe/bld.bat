@@ -1,4 +1,4 @@
-setlocal EnableDelayedExpansion
+REM setlocal EnableDelayedExpansion
 @echo on
 
 REM       -DCMAKE_Fortran_FLAGS="/wd4101 /wd4996 /static %CFLAGS%" ^
@@ -15,6 +15,8 @@ set FC=ifort
 set CC=icc
 echo %FC%
 echo %CC%
+where FC
+where CC
 
 REM allows meson to find conda mkl_rt
 set LIBRARY_PATH=%LIBRARY_LIB%
