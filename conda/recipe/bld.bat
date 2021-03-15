@@ -1,4 +1,4 @@
-REM setlocal EnableDelayedExpansion
+setlocal EnableDelayedExpansion
 @echo on
 
 REM       -DCMAKE_Fortran_FLAGS="/wd4101 /wd4996 /static %CFLAGS%" ^
@@ -13,14 +13,6 @@ echo %LATEST_VERSION%
 
 set FC=ifort
 set CC=icl
-echo %FC%
-echo %CC%
-echo CCC
-where %CC%
-where icl
-echo Fortran
-where %FC%
-where ifort
 echo DIR
 dir
 
@@ -37,7 +29,6 @@ set ^"MESON_OPTIONS=^
   --libdir="%LIBRARY_LIB%" ^
   --buildtype=release ^
   --backend=ninja ^
-  --debug ^
   -D python=true ^
   -D c_args=/Qopenmp ^
   -D fortran_args=/Qopenmp ^

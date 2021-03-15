@@ -254,7 +254,7 @@ jobs:
         pwd
         ls -l
         echo $SRC_DIR
-        cat $SRC_DIR/_build/meson-logs/meson-log.txt
+        cat /usr/local/miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
     - name: Archive Conda Package
       uses: actions/upload-artifact@v2
