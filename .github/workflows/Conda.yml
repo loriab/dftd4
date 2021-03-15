@@ -48,7 +48,7 @@ jobs:
         key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_CPP_COMPONENTS }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_windows.sh') }}
 
     - name: "OneAPI: install"
-      if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
+#      if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
       run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_CPP_COMPONENTS
       #run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL
       #run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS:$WINDOWS_CPP_COMPONENTS
@@ -261,7 +261,9 @@ jobs:
 
     - name: Meson log
       if: ${{ failure() }}
-      run: cat _build/meson-logs/meson-log.txt
+      run: |
+        pwd
+        cat $SRC_DIR/_build/meson-logs/meson-log.txt
 
     - name: Archive Conda Package
       uses: actions/upload-artifact@v2
