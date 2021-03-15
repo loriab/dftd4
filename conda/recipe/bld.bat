@@ -15,8 +15,11 @@ set FC=ifort
 set CC=icc
 echo %FC%
 echo %CC%
+echo Fortran
 where %FC%
+echo CCC
 where %CC%
+echo DIR
 dir
 
 REM allows meson to find conda mkl_rt
@@ -45,6 +48,8 @@ REM   "-Dc_link_args=-liomp5 -static-intel"
 
 mkdir _build
 cd _build
+cd
+dir
 
 :: configure build using meson
 :: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\
