@@ -30,7 +30,10 @@ fi
 
 export FC=ifort
 export CC=icc
-which icc icpc ifort
+export AR=xiar
+export LD=xild
+which icc icpc ifort xiar xild
+pwd
 
 # allows meson to find conda mkl_rt
 export LIBRARY_PATH=${PREFIX}/lib
@@ -74,6 +77,8 @@ if [[ "$(uname)" = Darwin ]]; then
 else
     meson "${meson_options_linux[@]}"
 fi
+
+cat $SRC_DIR/_build/meson-logs/meson-log.txt
 
 # Linux install
 ninja test install
