@@ -90,6 +90,15 @@ jobs:
         ls -l win-64/
         anaconda upload --label gha --skip win-64/*.tar.bz2
 
+    - name: Meson log
+      if: ${{ failure() }}
+      run: |
+        ls -l /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/
+        cat /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
+
+#      run: cat C:\\Miniconda\\conda-bld\\dftd4_1615850799729\\work\\_build\\meson-logs\\meson-log.txt
+
+
     - name: Archive Conda Package
       uses: actions/upload-artifact@v2
       with:

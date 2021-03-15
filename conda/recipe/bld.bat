@@ -35,7 +35,12 @@ set ^"MESON_OPTIONS=^
   -D lapack=mkl-rt ^
  ^"
 
+echo PERCENT
 echo %MESON_OPTIONS%
+echo EXCLAIM
+echo !MESON_OPTIONS!
+
+set MESON_FORCE_BACKTRACE=1
 
 REM   "-Dfortran_link_args=-liomp5 -Wl,-Bstatic -lifport -lifcoremt_pic -limf -lsvml -lirc -lsvml -lirc_s -Wl,-Bdynamic"
 REM   "-Dc_link_args=-liomp5 -static-intel"
