@@ -22,6 +22,7 @@ requirements:
     - {{ compiler('c') }}
 #    - {{ compiler('fortran') }}                            # [not win]
     - cffi
+    - llvm-openmp                                           # [osx]
     - meson 0.55.*
     - ninja
 #    - pkg-config
@@ -29,7 +30,8 @@ requirements:
   host:
     - cffi
 #    - dftd4
-    - intel-openmp
+    - intel-openmp                                          # [not osx]
+    - llvm-openmp                                           # [osx]
     - mkl-devel
     - pip
     - python 3.9
@@ -41,11 +43,11 @@ requirements:
 #    - {{ pin_compatible('dftd4', max_pin='x.x') }}
 #    - intel-openmp
 #    - {{ pin_compatible('mkl', upper_bound='2021.0') }}
+    - qcelemental >=0.19.0
 
 test:
   requires:
     - pytest
-    - qcelemental >=0.19.0
   commands:
   imports:
     - dftd4

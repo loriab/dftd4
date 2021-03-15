@@ -15,8 +15,9 @@ set FC=ifort
 set CC=icc
 echo %FC%
 echo %CC%
-where FC
-where CC
+where %FC%
+where %CC%
+dir
 
 REM allows meson to find conda mkl_rt
 set LIBRARY_PATH=%LIBRARY_LIB%
@@ -40,13 +41,6 @@ echo %MESON_OPTIONS%
 
 REM   "-Dfortran_link_args=-liomp5 -Wl,-Bstatic -lifport -lifcoremt_pic -limf -lsvml -lirc -lsvml -lirc_s -Wl,-Bdynamic"
 REM   "-Dc_link_args=-liomp5 -static-intel"
-
-REM mkdir _build
-REM cd _build
-
-REM build and test
-REM meson "${meson_options[@]}"
-REM if errorlevel 1 exit 1
 
 :: configure build using meson
 :: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\
