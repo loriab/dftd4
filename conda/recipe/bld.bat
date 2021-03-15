@@ -13,14 +13,12 @@ echo %LATEST_VERSION%
 
 set FC=ifort
 set CC=icc
+echo %FC%
+echo %CC%
 
 REM allows meson to find conda mkl_rt
 set LIBRARY_PATH=%LIBRARY_LIB%
-
-::  --wrap-mode=nofallback ^
-REM configure
-::   "--warnlevel=0"
-
+echo %LIBRARY_PATH%
 
 :: meson options
 :: (set pkg_config_path so deps in host env can be found)
@@ -36,11 +34,13 @@ set ^"MESON_OPTIONS=^
   -D lapack=mkl-rt ^
  ^"
 
+echo %MESON_OPTIONS%
+
 REM   "-Dfortran_link_args=-liomp5 -Wl,-Bstatic -lifport -lifcoremt_pic -limf -lsvml -lirc -lsvml -lirc_s -Wl,-Bdynamic"
 REM   "-Dc_link_args=-liomp5 -static-intel"
 
-mkdir _build
-cd _build
+REM mkdir _build
+REM cd _build
 
 REM build and test
 REM meson "${meson_options[@]}"
