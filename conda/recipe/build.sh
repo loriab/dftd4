@@ -30,6 +30,8 @@ fi
 
 export FC=ifort
 export CC=icc
+which icc icpc ifort
+ifort -help
 
 # allows meson to find conda mkl_rt
 export LIBRARY_PATH=${PREFIX}/lib
@@ -40,6 +42,7 @@ meson_options=(
    "--libdir=lib"
    "--buildtype=release"
    "--warnlevel=0"
+   "--debug"
    "-Dpython=true"
    "-Dc_args=-qopenmp"
    "-Dfortran_args=-qopenmp"
@@ -53,12 +56,12 @@ mkdir -p _build
 pushd _build
 
 # build and test
-if [[ "$(uname)" = Darwin ]]; then
-    # Hack around issue, see contents of fake-bin/cc1 for an explanation
-    PATH=${PATH}:${RECIPE_DIR}/fake-bin meson "${meson_options[@]}"
-else
+#if [[ "$(uname)" = Darwin ]]; then
+#    # Hack around issue, see contents of fake-bin/cc1 for an explanation
+#    PATH=${PATH}:${RECIPE_DIR}/fake-bin meson "${meson_options[@]}"
+#else
     meson "${meson_options[@]}"
-fi
+#fi
 
 # Linux install
 ninja test install

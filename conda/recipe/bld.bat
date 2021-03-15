@@ -17,8 +17,11 @@ echo %FC%
 echo %CC%
 echo CCC
 where %CC%
+where icc
+where icpc
 echo Fortran
 where %FC%
+where ifort
 echo DIR
 dir
 
@@ -29,16 +32,17 @@ echo %LIBRARY_PATH%
 ::  --pkg-config-path="%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig" ^
 :: meson options
 :: (set pkg_config_path so deps in host env can be found)
+::  .. ^
 set ^"MESON_OPTIONS=^
   --prefix="%LIBRARY_PREFIX%" ^
   --libdir="%LIBRARY_LIB%" ^
   --buildtype=release ^
   --backend=ninja ^
+  --debug ^
   -D python=true ^
   -D c_args=/Qopenmp ^
   -D fortran_args=/Qopenmp ^
   -D lapack=mkl-rt ^
-  .. ^
  ^"
 
 echo %MESON_OPTIONS%
@@ -47,23 +51,23 @@ REM   "-Dfortran_link_args=-liomp5 -Wl,-Bstatic -lifport -lifcoremt_pic -limf -l
 REM   "-Dc_link_args=-liomp5 -static-intel"
 
 mkdir _build
-cd _build
+::cd _build
 cd
 dir
 
 :: configure build using meson
 :: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\
-:: meson setup builddir !MESON_OPTIONS!
-meson !MESON_OPTIONS!
+meson setup _build . !MESON_OPTIONS!
+::meson !MESON_OPTIONS!
 if errorlevel 1 exit 1
 
 :: print results of build configuration
 :: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\
-meson configure builddir
+meson configure _build
 if errorlevel 1 exit 1
 
 :: Linux install
-ninja -v -C builddir test install
+ninja -v -C _build test install
 if errorlevel 1 exit 1
 
 dir builddir
