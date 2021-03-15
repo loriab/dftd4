@@ -219,13 +219,6 @@ jobs:
       if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
       run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_FORTRAN_COMPONENTS:$MACOS_CPP_COMPONENTS
 
-#      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_FORTRAN_COMPONENTS;$MACOS_CPP_COMPONENTS
-
-#    - name: "OneAPI C: install"
-#      if: steps.cache-install-c.outputs.cache-hit != 'true'
-#      run: devtools/oneapi-ci/install_macos.sh $MACOS_HPCKIT_URL $MACOS_CPP_COMPONENTS
-# failing v/c installed
-
     - name: Create Conda Environment
       uses: conda-incubator/setup-miniconda@v2
       with:
