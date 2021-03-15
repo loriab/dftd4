@@ -35,6 +35,7 @@ set ^"MESON_OPTIONS=^
   -D c_args=/Qopenmp ^
   -D fortran_args=/Qopenmp ^
   -D lapack=mkl-rt ^
+  .. ^
  ^"
 
 echo %MESON_OPTIONS%
@@ -42,9 +43,13 @@ echo %MESON_OPTIONS%
 REM   "-Dfortran_link_args=-liomp5 -Wl,-Bstatic -lifport -lifcoremt_pic -limf -lsvml -lirc -lsvml -lirc_s -Wl,-Bdynamic"
 REM   "-Dc_link_args=-liomp5 -static-intel"
 
+mkdir _build
+cd _build
+
 :: configure build using meson
 :: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\
-meson setup builddir !MESON_OPTIONS!
+:: meson setup builddir !MESON_OPTIONS!
+meson !MESON_OPTIONS!
 if errorlevel 1 exit 1
 
 :: print results of build configuration
