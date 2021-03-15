@@ -34,6 +34,7 @@ export CC=icc
 #export LD=xild
 which icc icpc ifort xiar xild
 pwd
+echo $SRC_DIR
 
 # allows meson to find conda mkl_rt
 export LIBRARY_PATH=${PREFIX}/lib

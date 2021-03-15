@@ -12,13 +12,12 @@ echo %LATEST_VERSION%
 
 
 set FC=ifort
-set CC=icc
+set CC=icl
 echo %FC%
 echo %CC%
 echo CCC
 where %CC%
-where icc
-where icpc
+where icl
 echo Fortran
 where %FC%
 where ifort
