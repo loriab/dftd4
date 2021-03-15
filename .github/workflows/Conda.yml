@@ -48,8 +48,8 @@ jobs:
         key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_CPP_COMPONENTS }}-compiler-${{ hashFiles('**/devtools/oneapi-ci/cache_exclude_windows.sh') }}
 
     - name: "OneAPI: install"
-#      if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
       run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS:$WINDOWS_CPP_COMPONENTS
+#      if: (steps.cache-install-f.outputs.cache-hit != 'true') || (steps.cache-install-c.outputs.cache-hit != 'true')
       #run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
       #run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL
       #run: devtools/oneapi-ci/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS,$WINDOWS_CPP_COMPONENTS
@@ -81,8 +81,8 @@ jobs:
         for /f "tokens=* usebackq" %%f in (`dir /b "C:\Program Files (x86)\Intel\oneAPI\compiler\" ^| findstr /V latest ^| sort`) do @set "LATEST_VERSION=%%f"
         echo %LATEST_VERSION%
         @call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
-        where icl
         where ifort
+        where icl
 
     - name: Conda-Build for Windows
       env:
