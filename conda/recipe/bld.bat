@@ -15,10 +15,10 @@ set FC=ifort
 set CC=icc
 echo %FC%
 echo %CC%
-echo Fortran
-where %FC%
 echo CCC
 where %CC%
+echo Fortran
+where %FC%
 echo DIR
 dir
 
@@ -26,12 +26,12 @@ REM allows meson to find conda mkl_rt
 set LIBRARY_PATH=%LIBRARY_LIB%
 echo %LIBRARY_PATH%
 
+::  --pkg-config-path="%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig" ^
 :: meson options
 :: (set pkg_config_path so deps in host env can be found)
 set ^"MESON_OPTIONS=^
   --prefix="%LIBRARY_PREFIX%" ^
   --libdir="%LIBRARY_LIB%" ^
-  --pkg-config-path="%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig" ^
   --buildtype=release ^
   --backend=ninja ^
   -D python=true ^
