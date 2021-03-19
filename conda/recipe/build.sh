@@ -71,6 +71,7 @@ if [[ "$(uname)" = Darwin ]]; then
 #    # Hack around issue, see contents of fake-bin/cc1 for an explanation
 #    PATH=${PATH}:${RECIPE_DIR}/fake-bin meson "${meson_options[@]}"
     meson "${meson_options_mac[@]}"
+    DYLD_LIBRARY_PATH=${PREFIX}/lib:${DYLD_LIBRARY_PATH}
 else
     meson "${meson_options_linux[@]}"
 fi

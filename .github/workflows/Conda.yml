@@ -64,10 +64,11 @@ jobs:
         auto-activate-base: true
         conda-build-version: "*"
         show-channel-urls: true
+        channels: conda-forge
 
     - name: Environment Information
       run: |
-        conda install anaconda-client
+        conda install anaconda-client -c conda-forge
         conda info
         conda list
 
@@ -81,12 +82,13 @@ jobs:
         where ifort
         where icl
 
+        #conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
     - name: Conda-Build for Windows
       env:
         # generate token at anaconda.org, then at GH Settings Secrets, save as repository secret with name ANACONDA_TOKEN
         ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
       run: |
-        conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
+        conda build conda/recipe -c conda-forge -c psi4/label/dev --output-folder .
         ls -l win-64/
         anaconda upload --label gha --skip win-64/*.tar.bz2
 
@@ -95,9 +97,6 @@ jobs:
       run: |
         ls -l /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/
         cat /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
-
-#      run: cat C:\\Miniconda\\conda-bld\\dftd4_1615850799729\\work\\_build\\meson-logs\\meson-log.txt
-
 
     - name: Archive Conda Package
       uses: actions/upload-artifact@v2
@@ -260,9 +259,7 @@ jobs:
     - name: Meson log
       if: ${{ failure() }}
       run: |
-        pwd
         ls -l
-        echo $SRC_DIR
         cat /usr/local/miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
     - name: Archive Conda Package
