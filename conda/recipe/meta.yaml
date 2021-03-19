@@ -27,6 +27,7 @@ requirements:
     - ninja
 #    - pkg-config
     - python 3.9
+    - mkl-devel
   host:
     - cffi
 #    - dftd4
@@ -40,6 +41,7 @@ requirements:
     - numpy # [not osx]
     - python 3.9
     - toml >=0.10.1
+    - mkl-devel
 #    - {{ pin_compatible('dftd4', max_pin='x.x') }}
 #    - intel-openmp
 #    - {{ pin_compatible('mkl', upper_bound='2021.0') }}

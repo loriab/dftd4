@@ -13,6 +13,7 @@ echo %LATEST_VERSION%
 
 set FC=ifort
 set CC=icl
+set CXX=icl
 echo DIR
 dir
 
@@ -20,7 +21,6 @@ REM allows meson to find conda mkl_rt
 set LIBRARY_PATH=%LIBRARY_LIB%
 echo %LIBRARY_PATH%
 
-::  --pkg-config-path="%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig" ^
 :: meson options
 :: (set pkg_config_path so deps in host env can be found)
 ::  .. ^
@@ -29,6 +29,8 @@ set ^"MESON_OPTIONS=^
   --libdir="%LIBRARY_LIB%" ^
   --buildtype=release ^
   --backend=ninja ^
+  --pkg-config-path="%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig" ^
+  --print-errorlogs ^
   -D python=true ^
   -D c_args=/Qopenmp ^
   -D fortran_args=/Qopenmp ^
