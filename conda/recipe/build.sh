@@ -53,7 +53,7 @@ meson_options_mac=(
    "--libdir=lib"
    "--buildtype=release"
    "--warnlevel=0"
-   "--print-errorlogs"
+   "--errorlogs"
    "-Dpython=true"
    "-Dc_args=-qopenmp"
    "-Dfortran_args=-qopenmp"

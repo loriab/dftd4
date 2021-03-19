@@ -14,6 +14,12 @@ echo %LATEST_VERSION%
 set FC=ifort
 set CC=icl
 set CXX=icl
+echo !FC!
+where ifort
+where ifort > tmpFile
+set /p FC= < tmpFile
+del tmpFile
+echo !FC!
 echo DIR
 dir
 
@@ -30,7 +36,7 @@ set ^"MESON_OPTIONS=^
   --buildtype=release ^
   --backend=ninja ^
   --pkg-config-path="%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig" ^
-  --print-errorlogs ^
+  --errorlogs ^
   -D python=true ^
   -D c_args=/Qopenmp ^
   -D fortran_args=/Qopenmp ^
@@ -83,7 +89,7 @@ cd ..
 
 REM ninja -v -C builddir
 REM if errorlevel 1 exit 1
-REM 
+REM
 REM ninja -C builddir install
 REM if errorlevel 1 exit 1
 
