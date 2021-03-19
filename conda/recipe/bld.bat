@@ -16,9 +16,9 @@ set CC=icl
 set CXX=icl
 echo !FC!
 where ifort
-where ifort > tmpFile
-set /p FC= < tmpFile
-del tmpFile
+:: where ifort > tmpFile
+:: set /p FC= < tmpFile
+:: del tmpFile
 echo !FC!
 echo DIR
 dir
@@ -30,6 +30,8 @@ echo %LIBRARY_PATH%
 :: meson options
 :: (set pkg_config_path so deps in host env can be found)
 ::  .. ^
+::  -D c_args=/Qopenmp ^
+::  -D fortran_args=/Qopenmp ^
 set ^"MESON_OPTIONS=^
   --prefix="%LIBRARY_PREFIX%" ^
   --libdir="%LIBRARY_LIB%" ^
@@ -37,9 +39,8 @@ set ^"MESON_OPTIONS=^
   --backend=ninja ^
   --pkg-config-path="%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig" ^
   --errorlogs ^
+  -D openmp=false ^
   -D python=true ^
-  -D c_args=/Qopenmp ^
-  -D fortran_args=/Qopenmp ^
   -D lapack=mkl-rt ^
  ^"
 

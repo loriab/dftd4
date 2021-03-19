@@ -23,6 +23,7 @@ dftd4_exe = executable(
   dependencies: dftd4_dep,
   install: install,
   install_rpath: rpath,
+  build_rpath: rpath,
 )
 
 test('app-version', dftd4_exe, args: '--version')
