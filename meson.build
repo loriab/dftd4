@@ -38,6 +38,8 @@ srcs = []
 subdir('src')
 
 # Library target
+rpath = get_option('prefix') + '/' + get_option('libdir')
+
 dftd4_lib = library(
   meson.project_name(),
   sources: srcs,
@@ -45,6 +47,8 @@ dftd4_lib = library(
   dependencies: lib_deps,
   include_directories: inc_dirs,
   install: install,
+  install_rpath: rpath,
+  build_rpath: rpath,
 )
 
 # Export dependency for other projects and test suite
