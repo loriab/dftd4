@@ -23,7 +23,8 @@ requirements:
 #    - {{ compiler('fortran') }}                            # [not win]
     - cffi
     - llvm-openmp                                           # [osx]
-    - meson 0.55.*
+#    - meson 0.55.*
+    - meson >=0.55
     - ninja
 #    - pkg-config
     - python 3.9
