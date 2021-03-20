@@ -26,7 +26,6 @@ endif
 
 fc = meson.get_compiler('fortran')
 fc_id = fc.get_id()
-message(fc)
 message(fc_id)
 
 if fc_id == 'gcc'
