@@ -20,6 +20,10 @@ where ifort
 :: set /p FC= < tmpFile
 :: del tmpFile
 echo !FC!
+icl --version
+ifort --version
+icl -V
+ifort -V
 echo DIR
 dir
 

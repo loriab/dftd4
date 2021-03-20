@@ -27,7 +27,7 @@ requirements:
     - meson >=0.55
     - ninja
 #    - pkg-config
-    - python 3.9
+    - python
     - mkl-devel
   host:
     - blas=*=mkl
@@ -37,13 +37,13 @@ requirements:
     - llvm-openmp                                           # [osx]
     - mkl-devel
     - pip
-    - python 3.9
+    - python
   run:
     - cffi
 #    - numpy # [not osx]
 #    - numpy
     - {{ pin_compatible('numpy') }}
-    - python 3.9
+    - {{ pin_compatible('python') }}
     - toml >=0.10.1
 #    - mkl-devel
     - {{ pin_compatible('mkl') }}
