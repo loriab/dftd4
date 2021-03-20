@@ -20,8 +20,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
-    - {{ compiler('fortran') }}                            # [win]
-#    - {{ compiler('fortran') }}                            # [not win]
+    - {{ compiler('fortran') }}                            # [not win]
     - cffi
     - llvm-openmp                                           # [osx]
 #    - meson 0.55.*
@@ -40,7 +39,8 @@ requirements:
     - python 3.9
   run:
     - cffi
-    - numpy # [not osx]
+#    - numpy # [not osx]
+    - numpy
     - python 3.9
     - toml >=0.10.1
     - mkl-devel
@@ -51,7 +51,8 @@ requirements:
 test:
   requires:
     - pytest
-    - qcelemental >=0.19.0 # [not osx]
+    #- qcelemental >=0.19.0 # [not osx]
+    - qcelemental >=0.19.0
   commands:
   imports:
     - dftd4
