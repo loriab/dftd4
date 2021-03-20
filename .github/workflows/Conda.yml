@@ -82,7 +82,7 @@ jobs:
         where ifort
         where icl
 
-        #conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
+#conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
     - name: Conda-Build for Windows
       env:
         # generate token at anaconda.org, then at GH Settings Secrets, save as repository secret with name ANACONDA_TOKEN
