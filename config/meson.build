@@ -26,8 +26,8 @@ endif
 
 fc = meson.get_compiler('fortran')
 fc_id = fc.get_id()
-print(fc)
-print(fc_id)
+message(fc)
+message(fc_id)
 
 if fc_id == 'gcc'
   add_project_arguments(
