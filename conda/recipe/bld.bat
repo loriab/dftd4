@@ -23,7 +23,7 @@ where ifort
 echo !FC!
 @call icl.exe
 @call ifort.exe
-ifort \help
+ifort /help
 icl --version
 ifort --version
 icl -V
