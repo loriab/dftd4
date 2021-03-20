@@ -21,16 +21,42 @@ where ifort
 :: set /p FC= < tmpFile
 :: del tmpFile
 echo !FC!
-@call icl.exe
-@call ifort.exe
 ifort /help
-icl --version
-ifort --version
-icl -V
-ifort -V
+icl --version 1>both.out 2>&1
+type both.out
+ifort --version 1>both.out 2>&1
+type both.out
 echo DIR
-dir
+:: dir
 
+
+:: ########
+:: 
+:: /Qglobal-hoist[-]
+::           enable(DEFAULT)/disable external globals are load safe
+:: 
+:: /Qkeep-static-consts[-]
+::           enable/disable(DEFAULT) the ability to preserve allocation of
+:: Intel(R) Fortran Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.1 Build 20201112_000000
+:: Copyright (C) 1985-2020 Intel Corporation.  All rights reserved.
+:: 
+:: ifort: command line warning #10006: ignoring unknown option '/-version'
+:: ifort: command line error: no files specified; for help type "ifort /help"
+:: Intel(R) C++ Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.1 Build 20201112_000000
+:: Copyright (C) 1985-2020 Intel Corporation.  All rights reserved.
+:: 
+:: icl: command line warning #10155: ignoring option '/V'; argument required
+:: icl: command line error: no files specified; for help type "icl /help"
+:: Intel(R) Fortran Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.1 Build 20201112_000000
+:: Copyright (C) 1985-2020 Intel Corporation.  All rights reserved.
+:: 
+:: ifort: command line warning #10155: ignoring option '/V'; argument required
+:: ifort: command line error: no files specified; for help type "ifort /help"
+::           variables that are not referenced in the source
+:: 
+:: /Qnobss-init
+::           disable placement of zero-initialized variables in BSS (use DATA)
+:: ########
 REM allows meson to find conda mkl_rt
 set LIBRARY_PATH=%LIBRARY_LIB%
 echo %LIBRARY_PATH%
