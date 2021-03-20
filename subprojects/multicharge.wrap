@@ -1,5 +1,7 @@
 [wrap-git]
 directory = multicharge
-url = https://github.com/grimme-lab/multicharge
+#url = https://github.com/grimme-lab/multicharge
+url = https://github.com/loriab/multicharge
 #revision = v0.1.0
-revision = main
+#revision = main
+revision = rpath
