@@ -39,21 +39,23 @@ requirements:
     - pip
     - python
   run:
+    - blas=*=mkl
+    - numpy
     - cffi
 #    - numpy # [not osx]
 #    - numpy
-    - {{ pin_compatible('numpy') }}
-    - {{ pin_compatible('python') }}
+    #- {{ pin_compatible('numpy') }}
+    #- {{ pin_compatible('python') }}
     - toml >=0.10.1 [not osx]
 #    - mkl-devel
-    - {{ pin_compatible('mkl') }}
+    #- {{ pin_compatible('mkl') }}
 #    - {{ pin_compatible('dftd4', max_pin='x.x') }}
 #    - intel-openmp
 #    - {{ pin_compatible('mkl', upper_bound='2021.0') }}
 
 test:
   requires:
-    - pytest
+    - pytest  # [not osx]
     - qcelemental >=0.19.0 # [not osx]
     #- qcelemental >=0.19.0
   commands:

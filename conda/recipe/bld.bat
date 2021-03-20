@@ -21,8 +21,9 @@ where ifort
 :: set /p FC= < tmpFile
 :: del tmpFile
 echo !FC!
-icl.exe
-ifort.exe
+@call icl.exe
+@call ifort.exe
+ifort \help
 icl --version
 ifort --version
 icl -V
