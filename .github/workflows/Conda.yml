@@ -64,11 +64,10 @@ jobs:
         auto-activate-base: true
         conda-build-version: "*"
         show-channel-urls: true
-        channels: conda-forge,defaults
 
     - name: Environment Information
       run: |
-        conda install anaconda-client -c conda-forge
+        conda install anaconda-client
         conda info
         conda list
 
@@ -88,7 +87,7 @@ jobs:
         # generate token at anaconda.org, then at GH Settings Secrets, save as repository secret with name ANACONDA_TOKEN
         ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
       run: |
-        conda build conda/recipe -c conda-forge -c psi4/label/dev --output-folder .
+        conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
         ls -l win-64/
         anaconda upload --label gha --skip win-64/*.tar.bz2
 

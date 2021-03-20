@@ -71,18 +71,19 @@ if [[ "$(uname)" = Darwin ]]; then
 #    # Hack around issue, see contents of fake-bin/cc1 for an explanation
 #    PATH=${PATH}:${RECIPE_DIR}/fake-bin meson "${meson_options[@]}"
     meson "${meson_options_mac[@]}"
-    DYLD_LIBRARY_PATH=${PREFIX}/lib:${DYLD_LIBRARY_PATH}
+#    DYLD_LIBRARY_PATH=${PREFIX}/lib:${DYLD_LIBRARY_PATH}
 else
     meson "${meson_options_linux[@]}"
 fi
 
-cat $SRC_DIR/_build/meson-logs/meson-log.txt
+#cat $SRC_DIR/_build/meson-logs/meson-log.txt
 
 # Linux install
 ninja test install
 
 # Python install
-cp python/dftd4/_libdftd4.*${SHLIB_EXT} ../python/dftd4
+ls -l python/dftd4
+cp python/dftd4/_libdftd4.*so ../python/dftd4
 popd
 cp assets/parameters.toml python/dftd4/
 pushd python

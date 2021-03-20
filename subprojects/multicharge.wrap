@@ -4,4 +4,4 @@ directory = multicharge
 url = https://github.com/loriab/multicharge
 #revision = v0.1.0
 #revision = main
-revision = rpath
+revision = notest
