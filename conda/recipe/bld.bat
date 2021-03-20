@@ -11,15 +11,18 @@ echo %LATEST_VERSION%
 @call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
 
 
-set FC=ifort
-set CC=icl
-set CXX=icl
+@echo on
+set FC=ifort.exe
+set CC=icl.exe
+set CXX=icl.exe
 echo !FC!
 where ifort
 :: where ifort > tmpFile
 :: set /p FC= < tmpFile
 :: del tmpFile
 echo !FC!
+icl.exe
+ifort.exe
 icl --version
 ifort --version
 icl -V
