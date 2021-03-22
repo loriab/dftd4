@@ -21,33 +21,24 @@ requirements:
   build:
     - {{ compiler('c') }}
     - cffi
-    #- llvm-openmp                                           # [osx]
-#    - meson 0.55.*
     - meson 0.57.1
+    - mkl-devel 2019.*
     - ninja
-#    - pkg-config
     - python
-    - mkl-devel 2019
   host:
     - blas=*=mkl
     - cffi
-    #- intel-openmp                                          # [not osx]
-    #- llvm-openmp                                           # [osx]
     - intel-openmp
-    - mkl-devel 2019
+    - mkl-devel 2019.*
     - pip
     - python
   run:
     - blas=*=mkl
-    - numpy
     - cffi
+    - mkl-devel 2019.*
+    - numpy
     - {{ pin_compatible('python') }}
     - toml
-    - mkl-devel 2019
-    #- {{ pin_compatible('mkl') }}
-#    - {{ pin_compatible('dftd4', max_pin='x.x') }}
-#    - intel-openmp
-    #- {{ pin_compatible('mkl', upper_bound='2021.0') }}
 
 # ok mac conda create -n qwer clang_osx-64 cffi python mkl-devel numpy ninja toml meson=0.57.1 pip pytest pydantic pint qcelemental -c defaults -c psi4/label/dev
 
