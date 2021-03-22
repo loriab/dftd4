@@ -60,7 +60,7 @@ dftd4_dep = declare_dependency(
 )
 
 # Add applications
-#subdir('app')
+subdir('app')
 
 # Package the license files
 dftd4_lic = files(
@@ -102,7 +102,7 @@ if install
 endif
 
 # add the testsuite
-#subdir('test')
+subdir('test')
 
 if get_option('python')
   subdir('python'/'dftd4')
