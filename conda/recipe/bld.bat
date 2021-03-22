@@ -28,17 +28,17 @@ echo BOTH
 ifort --version 1>both.out 2>&1
 type both.out
 ifort 1> out.out 2> err.out
-echo OUT
-type out.out
 echo ERR
 type err.out
+echo COMBO
+ifort --version 2>&1
 echo DIR 1
 :: dir
 
-findstr /i Intel "PORT" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
+findstr /i "Intel" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
 cp %RECIPE_DIR%\environment.py %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\
 echo DIR 2
-findstr /i Intel "PORT" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
+findstr /i "Intel" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
 
 
 :: ########

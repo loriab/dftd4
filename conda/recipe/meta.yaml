@@ -13,16 +13,16 @@ source:
 build:
   number: 0
   binary_relocation: true
-#  ignore_run_exports:
-#    - libgcc-ng                                            # [linux]
-#    - libgfortran-ng                                       # [linux]
+  ignore_run_exports:
+    - libgcc-ng                                            # [linux]
+    - libgfortran-ng                                       # [linux]
 
 requirements:
   build:
     - {{ compiler('c') }}
 #    - {{ compiler('fortran') }}                            # [not win]
     - cffi
-    - llvm-openmp                                           # [osx]
+    #- llvm-openmp                                           # [osx]
 #    - meson 0.55.*
     - meson >=0.55
     - ninja
@@ -33,8 +33,9 @@ requirements:
     #- blas=*=mkl
     - cffi
 #    - dftd4
-    - intel-openmp                                          # [not osx]
-    - llvm-openmp                                           # [osx]
+    #- intel-openmp                                          # [not osx]
+    #- llvm-openmp                                           # [osx]
+    - intel-openmp
     - mkl-devel
     - pip
     - python
