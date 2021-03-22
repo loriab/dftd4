@@ -14,7 +14,7 @@ build:
   number: 0
   binary_relocation: true
   ignore_run_exports:
-    - libgcc-ng                                            # [linux]
+#    - libgcc-ng                                            # [linux]
     - libgfortran-ng                                       # [linux]
 
 requirements:
