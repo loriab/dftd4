@@ -1,4 +1,6 @@
 [wrap-git]
 directory = mstore
-url = https://github.com/grimme-lab/mstore
-revision = v0.1.2
+#url = https://github.com/grimme-lab/mstore
+#revision = v0.1.2
+url = https://github.com/loriab/mstore
+revision = notest

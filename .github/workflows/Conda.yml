@@ -179,7 +179,7 @@ jobs:
 
       # `-c defaults -c psi4/label/dev` -or- `-c conda-forge` for QCElemental dep
     - name: Conda-Build for Linux
-      run: conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
+      run: conda build conda/recipe -c defaults -c psi4/label/dev --output-folder . --error-overlinking --error-overdepending
 
     - name: Meson Log
       if: ${{ failure() }}
@@ -258,7 +258,7 @@ jobs:
         icpc --version
 
     - name: Conda-Build for Mac
-      run: conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
+      run: conda build conda/recipe -c defaults -c psi4/label/dev --output-folder . --error-overlinking --error-overdepending
 
     - name: Meson Log
       if: ${{ failure() }}
