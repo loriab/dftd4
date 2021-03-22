@@ -30,7 +30,7 @@ requirements:
     - python
     - mkl-devel
   host:
-    - blas=*=mkl
+    #- blas=*=mkl
     - cffi
 #    - dftd4
     - intel-openmp                                          # [not osx]
@@ -42,11 +42,7 @@ requirements:
     - blas=*=mkl
     - numpy
     - cffi
-#    - numpy # [not osx]
-#    - numpy
-    #- {{ pin_compatible('numpy') }}
     - {{ pin_compatible('python') }}
-  #  - toml >=0.10.1 [not osx]
     - toml
 #    - mkl-devel
     #- {{ pin_compatible('mkl') }}
