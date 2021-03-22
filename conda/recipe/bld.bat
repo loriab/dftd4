@@ -12,9 +12,9 @@ echo %LATEST_VERSION%
 
 
 @echo on
-set FC=ifort.exe
-set CC=icl.exe
-set CXX=icl.exe
+set FC=ifort
+set CC=icl
+set CXX=icl
 echo !FC!
 where ifort
 :: where ifort > tmpFile
@@ -29,6 +29,7 @@ type both.out
 echo DIR
 :: dir
 
+cp %SRC_DIR%/environment.py %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\
 
 :: ########
 :: 

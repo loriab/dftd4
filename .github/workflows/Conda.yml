@@ -251,7 +251,7 @@ jobs:
       env:
         ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
       run: |
-        conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
+        conda build conda/recipe -c defaults -c psi4/label/dev -c conda-forge --output-folder .
         ls -l osx-64/
         anaconda upload --label gha --skip osx-64/*.tar.bz2
 
