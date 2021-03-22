@@ -80,6 +80,8 @@ jobs:
         @call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
         where ifort
         where icl
+        ifort 2>&1
+        icl 2>&1
 
 #conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
     - name: Conda-Build for Windows
@@ -91,7 +93,7 @@ jobs:
         ls -l win-64/
         anaconda upload --label gha --skip win-64/*.tar.bz2
 
-    - name: Meson log
+    - name: Meson Log
       if: ${{ failure() }}
       run: cat /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
@@ -178,14 +180,9 @@ jobs:
 
       # `-c defaults -c psi4/label/dev` -or- `-c conda-forge` for QCElemental dep
     - name: Conda-Build for Linux
-      env:
-        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-      run: |
-        conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
-        ls -l linux-64/
-        anaconda upload --label gha --skip linux-64/*.tar.bz2
+      run: conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
 
-    - name: Meson log
+    - name: Meson Log
       if: ${{ failure() }}
       run: cat /usr/local/miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
@@ -196,6 +193,13 @@ jobs:
         path: |
           linux-64/*.tar.bz2
         retention-days: 1
+
+    - name: Anaconda.org Upload for Linux
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+      run: |
+        ls -l linux-64/
+        anaconda upload --label gha --skip linux-64/*.tar.bz2
 
 
   macos_intel:
@@ -255,15 +259,11 @@ jobs:
         icc --version
         icpc --version
 
+#run: conda build conda/recipe -c defaults -c psi4/label/dev -c conda-forge --output-folder .
     - name: Conda-Build for Mac
-      env:
-        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-      run: |
-        conda build conda/recipe -c defaults -c psi4/label/dev -c conda-forge --output-folder .
-        ls -l osx-64/
-        anaconda upload --label gha --skip osx-64/*.tar.bz2
+      run: conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
 
-    - name: Meson log
+    - name: Meson Log
       if: ${{ failure() }}
       run: cat /usr/local/miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
@@ -274,6 +274,13 @@ jobs:
         path: |
           osx-64/*.tar.bz2
         retention-days: 1
+
+    - name: Anaconda.org Upload for Mac
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+      run: |
+        ls -l osx-64/
+        anaconda upload --label gha --skip osx-64/*.tar.bz2
 
 
 # more setup-miniconda options

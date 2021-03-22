@@ -22,54 +22,11 @@ where ifort
 :: del tmpFile
 echo !FC!
 :: works but long: ifort /help
-:: icl --version 1>both.out 2>&1
-:: type both.out
-:: echo BOTH
-:: ifort --version 1>both.out 2>&1
-:: type both.out
-ifort 1> out.out 2> err.out
-echo ERR
-type err.out
-echo COMBO
-ifort 2>&1
-echo DIR 1
-:: dir
 
-findstr /i "Intel" %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
-::findstr /i "Intel" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
+:: findstr /i "Intel" %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
 cp %RECIPE_DIR%\environment.py %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
-echo DIR 2
-::findstr /i "Intel" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
-findstr /i "Intel" %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
+:: findstr /i "Intel" %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
 
-
-:: ########
-:: 
-:: /Qglobal-hoist[-]
-::           enable(DEFAULT)/disable external globals are load safe
-:: 
-:: /Qkeep-static-consts[-]
-::           enable/disable(DEFAULT) the ability to preserve allocation of
-:: Intel(R) Fortran Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.1 Build 20201112_000000
-:: Copyright (C) 1985-2020 Intel Corporation.  All rights reserved.
-:: 
-:: ifort: command line warning #10006: ignoring unknown option '/-version'
-:: ifort: command line error: no files specified; for help type "ifort /help"
-:: Intel(R) C++ Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.1 Build 20201112_000000
-:: Copyright (C) 1985-2020 Intel Corporation.  All rights reserved.
-:: 
-:: icl: command line warning #10155: ignoring option '/V'; argument required
-:: icl: command line error: no files specified; for help type "icl /help"
-:: Intel(R) Fortran Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.1 Build 20201112_000000
-:: Copyright (C) 1985-2020 Intel Corporation.  All rights reserved.
-:: 
-:: ifort: command line warning #10155: ignoring option '/V'; argument required
-:: ifort: command line error: no files specified; for help type "ifort /help"
-::           variables that are not referenced in the source
-:: 
-:: /Qnobss-init
-::           disable placement of zero-initialized variables in BSS (use DATA)
-:: ########
 REM allows meson to find conda mkl_rt
 set LIBRARY_PATH=%LIBRARY_LIB%
 echo %LIBRARY_PATH%
@@ -79,9 +36,17 @@ echo %LIBRARY_PATH%
 ::  .. ^
 ::  -D c_args=/Qopenmp ^
 ::  -D fortran_args=/Qopenmp ^
+
+:: set pkg-config path so that host deps can be found
+:: (set as env var so it's used by both meson and during build with g-ir-scanner)
+set "PKG_CONFIG_PATH=%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig"
+
+:: get mixed path (forward slash) form of prefix so host prefix replacement works
+set "LIBRARY_PREFIX_M=%LIBRARY_PREFIX:\=/%"
+
+
 set ^"MESON_OPTIONS=^
-  --prefix="%LIBRARY_PREFIX%" ^
-  --libdir="%LIBRARY_LIB%" ^
+  --prefix="%LIBRARY_PREFIX_M%" ^
   --buildtype=release ^
   --backend=ninja ^
   --pkg-config-path="%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig" ^
@@ -91,45 +56,56 @@ set ^"MESON_OPTIONS=^
   -D lapack=mkl-rt ^
  ^"
 
+::  --prefix="%LIBRARY_PREFIX%" ^
+::  --libdir="%LIBRARY_LIB%" ^
+
 echo PERCENT
 echo %MESON_OPTIONS%
 echo EXCLAIM
 echo !MESON_OPTIONS!
 
-set MESON_FORCE_BACKTRACE=1
-
-REM   "-Dfortran_link_args=-liomp5 -Wl,-Bstatic -lifport -lifcoremt_pic -limf -lsvml -lirc -lsvml -lirc_s -Wl,-Bdynamic"
-REM   "-Dc_link_args=-liomp5 -static-intel"
-
-mkdir _build
-::cd _build
+:: mkdir _build
 cd
-dir
+
 
 :: configure build using meson
-:: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\
-meson setup _build . !MESON_OPTIONS!
-::meson !MESON_OPTIONS!
+%BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\meson setup builddir !MESON_OPTIONS!
 if errorlevel 1 exit 1
 
 :: print results of build configuration
-:: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\
-meson configure _build
+%BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\meson configure builddir
 if errorlevel 1 exit 1
 
-:: Linux install
-ninja -v -C _build test install
+ninja -v -C builddir -j %CPU_COUNT%
 if errorlevel 1 exit 1
 
-dir builddir
-
-:: Python install
-cp builddir\python\dftd4\_libdftd4.*%SHLIB_EXT% python\dftd4\
-cp assets/parameters.toml python\dftd4\
-cd python
-"%PYTHON%" -m pip install . --no-deps -vvv
+ninja -C builddir install -j %CPU_COUNT%
 if errorlevel 1 exit 1
-cd ..
+
+:: :: configure build using meson
+:: :: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\
+:: meson setup _build . !MESON_OPTIONS!
+:: ::meson !MESON_OPTIONS!
+:: if errorlevel 1 exit 1
+:: 
+:: :: print results of build configuration
+:: :: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\
+:: meson configure _build
+:: if errorlevel 1 exit 1
+:: 
+:: :: Linux install
+:: ninja -v -C _build test install
+:: if errorlevel 1 exit 1
+:: 
+:: dir builddir
+:: 
+:: :: Python install
+:: cp builddir\python\dftd4\_libdftd4.*%SHLIB_EXT% python\dftd4\
+:: cp assets/parameters.toml python\dftd4\
+:: cd python
+:: "%PYTHON%" -m pip install . --no-deps -vvv
+:: if errorlevel 1 exit 1
+:: cd ..
 
 :: ####
 
