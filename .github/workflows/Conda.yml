@@ -93,9 +93,7 @@ jobs:
 
     - name: Meson log
       if: ${{ failure() }}
-      run: |
-        ls -l /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/
-        cat /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
+      run: cat /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
     - name: Archive Conda Package
       uses: actions/upload-artifact@v2
@@ -174,6 +172,9 @@ jobs:
         LATEST_VERSION=$(ls -1 /opt/intel/oneapi/compiler/ | grep -v latest | sort | tail -1)
         source /opt/intel/oneapi/compiler/"$LATEST_VERSION"/env/vars.sh
         which conda conda-build python ifort icc icpc
+        ifort --version
+        icc --version
+        icpc --version
 
       # `-c defaults -c psi4/label/dev` -or- `-c conda-forge` for QCElemental dep
     - name: Conda-Build for Linux
@@ -183,6 +184,10 @@ jobs:
         conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
         ls -l linux-64/
         anaconda upload --label gha --skip linux-64/*.tar.bz2
+
+    - name: Meson log
+      if: ${{ failure() }}
+      run: cat /usr/local/miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
     - name: Archive Conda Package
       uses: actions/upload-artifact@v2
@@ -246,6 +251,9 @@ jobs:
       run: |
         source /opt/intel/oneapi/setvars.sh
         which conda conda-build python ifort icc icpc
+        ifort --version
+        icc --version
+        icpc --version
 
     - name: Conda-Build for Mac
       env:
@@ -257,9 +265,7 @@ jobs:
 
     - name: Meson log
       if: ${{ failure() }}
-      run: |
-        ls -l
-        cat /usr/local/miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
+      run: cat /usr/local/miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
     - name: Archive Conda Package
       uses: actions/upload-artifact@v2

@@ -29,7 +29,7 @@ type both.out
 echo DIR
 :: dir
 
-cp %SRC_DIR%\environment.py %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\
+cp %RECIPE_DIR%\environment.py %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\
 
 
 :: ########
