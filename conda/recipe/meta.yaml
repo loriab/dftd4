@@ -47,7 +47,7 @@ requirements:
     #- {{ pin_compatible('mkl') }}
 #    - {{ pin_compatible('dftd4', max_pin='x.x') }}
 #    - intel-openmp
-#    - {{ pin_compatible('mkl', upper_bound='2021.0') }}
+    - {{ pin_compatible('mkl', upper_bound='2021.0') }}
 
 test:
   requires:
