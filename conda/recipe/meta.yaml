@@ -38,7 +38,7 @@ requirements:
     - pip
     - python
   run:
-    - blas=*=mkl
+    #- blas=*=mkl
     - numpy
     - cffi
     - {{ pin_compatible('python') }}
