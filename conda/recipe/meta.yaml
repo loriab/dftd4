@@ -35,7 +35,8 @@ requirements:
   run:
     - blas=*=mkl
     - cffi
-    - mkl-devel 2019.*
+    - intel-openmp
+#    - mkl-devel 2019.*
     - numpy
     - {{ pin_compatible('python') }}
     - toml
