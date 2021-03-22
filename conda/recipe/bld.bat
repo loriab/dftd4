@@ -48,6 +48,7 @@ set "LIBRARY_PREFIX_M=%LIBRARY_PREFIX:\=/%"
 
 set ^"MESON_OPTIONS=^
   --prefix="%LIBRARY_PREFIX_M%" ^
+  --default-library=both ^
   --buildtype=release ^
   --backend=ninja ^
   --errorlogs ^
@@ -76,10 +77,12 @@ if errorlevel 1 exit 1
 meson configure _build
 if errorlevel 1 exit 1
 
-ninja -v -C _build -j %CPU_COUNT%
+::-j %CPU_COUNT%
+ninja -v -C _build
 if errorlevel 1 exit 1
 
-ninja -C _build install -j %CPU_COUNT%
+::-j %CPU_COUNT%
+ninja -C _build install
 if errorlevel 1 exit 1
 
 :: :: configure build using meson
