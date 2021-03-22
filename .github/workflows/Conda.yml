@@ -80,10 +80,9 @@ jobs:
         @call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
         where ifort
         where icl
-        ifort 2>&1 || exit 0
-        icl 2>&1 || exit 0
+        ifort 2>&1 || echo "Fortran available"
+        icl 2>&1 || echo "C/C++ available"
 
-#conda build conda/recipe -c defaults -c psi4/label/dev --output-folder .
     - name: Conda-Build for Windows
       env:
         # generate token at anaconda.org, then at GH Settings Secrets, save as repository secret with name ANACONDA_TOKEN
