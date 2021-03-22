@@ -56,9 +56,10 @@ requirements:
 
 test:
   requires:
-    - pytest  # [not osx]
-    - qcelemental >=0.19.0 # [not osx]
-    #- qcelemental >=0.19.0
+#    - pytest  # [not osx]
+#    - qcelemental >=0.19.0 # [not osx]
+    - pytest
+    - qcelemental >=0.19.0
   commands:
   imports:
     - dftd4
