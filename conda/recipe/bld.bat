@@ -22,23 +22,25 @@ where ifort
 :: del tmpFile
 echo !FC!
 :: works but long: ifort /help
-icl --version 1>both.out 2>&1
-type both.out
-echo BOTH
-ifort --version 1>both.out 2>&1
-type both.out
+:: icl --version 1>both.out 2>&1
+:: type both.out
+:: echo BOTH
+:: ifort --version 1>both.out 2>&1
+:: type both.out
 ifort 1> out.out 2> err.out
 echo ERR
 type err.out
 echo COMBO
-ifort --version 2>&1
+ifort 2>&1
 echo DIR 1
 :: dir
 
-findstr /i "Intel" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
-cp %RECIPE_DIR%\environment.py %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\
+findstr /i "Intel" %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
+::findstr /i "Intel" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
+cp %RECIPE_DIR%\environment.py %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
 echo DIR 2
-findstr /i "Intel" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
+::findstr /i "Intel" %BUILD_PREFIX%\Library\lib\python3.8\site-packages\mesonbuild\environment.py
+findstr /i "Intel" %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
 
 
 :: ########
