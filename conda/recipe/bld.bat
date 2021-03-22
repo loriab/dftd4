@@ -50,16 +50,14 @@ set ^"MESON_OPTIONS=^
   -D openmp=false ^
   -D python=true ^
   -D lapack=mkl-rt ^
+  -Dfortran_link_args="/wd4101 /wd4996 /static %FFLAGS%" ^
+  -Dc_link_args="%CFLAGS%" ^
  ^"
 
 ::  --prefix="%LIBRARY_PREFIX%" ^
 
 echo MESON_OPTIONS
 echo !MESON_OPTIONS!
-
-:: mkdir _build
-:: cd
-
 
 :: configure build using meson
 :: %BUILD_PREFIX%\python.exe %BUILD_PREFIX%\Scripts\

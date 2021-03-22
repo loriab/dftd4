@@ -13,8 +13,6 @@ source:
 build:
   number: 0
   binary_relocation: true
-#  ignore_run_exports:
-#    - libgfortran-ng                                       # [linux]
 
 requirements:
   build:
@@ -23,14 +21,14 @@ requirements:
     - meson 0.57.1
     - mkl-devel 2019.*
     - ninja
-    - python
+    - python {{ python }}
   host:
     - blas=*=mkl
     - cffi
     - mkl-devel 2019.*
     - intel-openmp
     - pip
-    - python
+    - python {{ python }}
   run:
     - blas=*=mkl
     - cffi

@@ -96,6 +96,7 @@ jobs:
       if: ${{ failure() }}
       run: |
         ls -l /c/Miniconda/conda-bld/dftd4_*/work/_build/
+        ls -l /c/Miniconda/conda-bld/dftd4_*/work/_build/app/
         cat /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
     - name: Archive Conda Package
