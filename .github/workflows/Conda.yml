@@ -80,8 +80,8 @@ jobs:
         @call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
         where ifort
         where icl
-        ifort 2>&1 || echo "Fortran available"
-        icl 2>&1 || echo "C/C++ available"
+        ifort 2>&1 || set ERRORLEVEL=0
+        icl 2>&1 || set ERRORLEVEL=0
 
     - name: Conda-Build for Windows
       env:
