@@ -13,9 +13,8 @@ source:
 build:
   number: 0
   binary_relocation: true
-  ignore_run_exports:
-#    - libgcc-ng                                            # [linux]
-    - libgfortran-ng                                       # [linux]
+#  ignore_run_exports:
+#    - libgfortran-ng                                       # [linux]
 
 requirements:
   build:
@@ -28,16 +27,15 @@ requirements:
   host:
     - blas=*=mkl
     - cffi
-    - intel-openmp
     - mkl-devel 2019.*
+    - intel-openmp
     - pip
     - python
   run:
     - blas=*=mkl
     - cffi
-    - intel-openmp
-#    - mkl-devel 2019.*
     - numpy
+    - intel-openmp
     - {{ pin_compatible('python') }}
     - toml
 

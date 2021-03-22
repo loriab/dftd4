@@ -14,18 +14,12 @@ echo %LATEST_VERSION%
 @echo on
 set FC=ifort
 set CC=icl
-set CXX=icl
-echo !FC!
-where ifort
-:: where ifort > tmpFile
-:: set /p FC= < tmpFile
-:: del tmpFile
-echo !FC!
-:: works but long: ifort /help
 
+:: works
+:: ifort /help
 :: findstr /i "Intel" %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
+
 cp %RECIPE_DIR%\environment.py %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
-:: findstr /i "Intel" %BUILD_PREFIX%\Lib\site-packages\mesonbuild\environment.py
 
 REM allows meson to find conda mkl_rt
 set LIBRARY_PATH=%LIBRARY_LIB%
@@ -39,7 +33,7 @@ echo %LIBRARY_PATH%
 
 :: set pkg-config path so that host deps can be found
 :: (set as env var so it's used by both meson and during build with g-ir-scanner)
-::::set "PKG_CONFIG_PATH=%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig"
+set "PKG_CONFIG_PATH=%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig"
 
 :: get mixed path (forward slash) form of prefix so host prefix replacement works
 set "LIBRARY_PREFIX_M=%LIBRARY_PREFIX:\=/%"
@@ -48,6 +42,7 @@ set "LIBRARY_PREFIX_M=%LIBRARY_PREFIX:\=/%"
 
 set ^"MESON_OPTIONS=^
   --prefix="%LIBRARY_PREFIX_M%" ^
+  --libdir="%LIBRARY_LIB%" ^
   --default-library=static ^
   --buildtype=release ^
   --backend=ninja ^
@@ -58,7 +53,6 @@ set ^"MESON_OPTIONS=^
  ^"
 
 ::  --prefix="%LIBRARY_PREFIX%" ^
-::  --libdir="%LIBRARY_LIB%" ^
 
 echo MESON_OPTIONS
 echo !MESON_OPTIONS!

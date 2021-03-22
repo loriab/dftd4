@@ -94,7 +94,9 @@ jobs:
 
     - name: Meson Log
       if: ${{ failure() }}
-      run: cat /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
+      run: |
+        ls -l /c/Miniconda/conda-bld/dftd4_*/work/_build/
+        cat /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
     - name: Archive Conda Package
       uses: actions/upload-artifact@v2
@@ -193,6 +195,7 @@ jobs:
           linux-64/*.tar.bz2
         retention-days: 1
 
+      # continue-on-error allows the whole job not to fail just b/c storage limits at anaconda.org hit
     - name: Upload Conda Package
       continue-on-error: true
       env:
