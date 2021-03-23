@@ -73,7 +73,7 @@ if errorlevel 1 exit 1
 
 echo DIR
 :: copy nul _build\dftd4.lib > nul
-copy "" _build\dftd4.lib > nul
+echo.>_build\dftd4.lib
 dir _build
 type _build\dftd4.lib
 
