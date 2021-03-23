@@ -47,11 +47,11 @@ set ^"MESON_OPTIONS=^
   --buildtype=release ^
   --backend=ninja ^
   --errorlogs ^
-  -D openmp=false ^
+  -D openmp=ture ^
   -D python=true ^
   -D lapack=mkl-rt ^
-  -Dfortran_link_args="/wd4101 /wd4996 /static %FFLAGS%" ^
-  -Dc_link_args="%CFLAGS%" ^
+  -Dfortran_link_args="/Qopenmp /wd4101 /wd4996 /static %FFLAGS%" ^
+  -Dc_link_args="/Qopenmp /static %CFLAGS%" ^
  ^"
 
 ::  --prefix="%LIBRARY_PREFIX%" ^
