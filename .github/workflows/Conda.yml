@@ -97,6 +97,7 @@ jobs:
       run: |
         ls -l /c/Miniconda/conda-bld/dftd4_*/work/_build/
         ls -l /c/Miniconda/conda-bld/dftd4_*/work/_build/app/
+        ls -l /c/Miniconda/conda-bld/dftd4_*/work/_build/src/
         cat /c/Miniconda/conda-bld/dftd4_*/work/_build/meson-logs/meson-log.txt
 
     - name: Archive Conda Package

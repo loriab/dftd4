@@ -11,7 +11,7 @@ source:
     - 001-dynamic-ifcore.patch
 
 build:
-  number: 0
+  number: 1
   binary_relocation: true
 
 requirements:
@@ -33,6 +33,7 @@ requirements:
     - blas=*=mkl
     - cffi
     - numpy
+    - {{ pin_compatible('mkl', upper_bound='2021.0') }}  # [linux]
     - intel-openmp
     - {{ pin_compatible('python') }}
     - toml
