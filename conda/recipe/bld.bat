@@ -72,7 +72,7 @@ meson configure _build
 if errorlevel 1 exit 1
 
 echo DIR
-copy nul _build/dftd4.lib > nul
+copy nul _build\dftd4.lib > nul
 dir _build
 
 ::-j %CPU_COUNT%
