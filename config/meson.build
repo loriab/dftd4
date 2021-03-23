@@ -17,16 +17,18 @@
 os = host_machine.system()
 message(os)
 
-if os == 'windows'
-  add_project_link_arguments(
-    '-Wl,--allow-multiple-definition',
-    language: 'fortran',
-  )
-endif
-
 fc = meson.get_compiler('fortran')
 fc_id = fc.get_id()
 message(fc_id)
+
+if os == 'windows'
+    if fc_id != 'intel'
+        add_project_link_arguments(
+          '-Wl,--allow-multiple-definition',
+          language: 'fortran',
+        )
+    endif
+endif
 
 if fc_id == 'gcc'
   add_project_arguments(

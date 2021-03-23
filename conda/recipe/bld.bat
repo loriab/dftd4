@@ -43,7 +43,7 @@ set "LIBRARY_PREFIX_M=%LIBRARY_PREFIX:\=/%"
 set ^"MESON_OPTIONS=^
   --prefix="%LIBRARY_PREFIX_M%" ^
   --libdir="%LIBRARY_LIB%" ^
-  --default-library=shared ^
+  --default-library=static^
   --buildtype=release ^
   --backend=ninja ^
   --errorlogs ^
