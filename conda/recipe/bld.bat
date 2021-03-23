@@ -50,8 +50,10 @@ set ^"MESON_OPTIONS=^
   -D openmp=ture ^
   -D python=true ^
   -D lapack=mkl-rt ^
-  -Dfortran_link_args="/Qopenmp /wd4101 /wd4996 /static %FFLAGS%" ^
-  -Dc_link_args="/Qopenmp /static %CFLAGS%" ^
+  -Dfortran_args="/wd4101 /wd4996 %FFLAGS%" ^
+  -Dc_args="%CFLAGS%" ^
+  -Dfortran_link_args="/Qopenmp /static" ^
+  -Dc_link_args="/Qopenmp /static" ^
  ^"
 
 ::  --prefix="%LIBRARY_PREFIX%" ^
