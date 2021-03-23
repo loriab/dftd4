@@ -71,6 +71,10 @@ if errorlevel 1 exit 1
 meson configure _build
 if errorlevel 1 exit 1
 
+echo DIR
+copy nul _build/dftd4.lib > nul
+dir _build
+
 ::-j %CPU_COUNT%
 ninja -v -C _build
 if errorlevel 1 exit 1
